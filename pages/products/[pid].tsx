@@ -3,7 +3,7 @@ import ErrorMessage from '../../components/error';
 import Form from '../../components/form';
 import Loading from '../../components/loading';
 import { useSession } from '../../context/session';
-import { useProductInfo, useProductList } from '../../lib/hooks';
+import { useProductCustomFieldsInfo, useProductInfo, useProductList } from '../../lib/hooks';
 import { FormData } from '../../types';
 
 const ProductInfo = () => {
@@ -11,8 +11,10 @@ const ProductInfo = () => {
     const encodedContext = useSession()?.context;
     const pid = Number(router.query?.pid);
     const { error, isLoading, list = [], mutateList } = useProductList();
-    const { isLoading: isInfoLoading, product } = useProductInfo(pid, list);
+    const { isLoading: isInfoLoading, product } = useProductInfo(pid);
+    const { customFields } = useProductCustomFieldsInfo(pid);
     const { description, is_visible: isVisible, name, price, type } = product ?? {};
+
     const formData = { description, isVisible, name, price, type };
 
     const handleCancel = () => router.push('/products');
@@ -32,6 +34,9 @@ const ProductInfo = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(apiFormattedData),
             });
+
+            console.error(customFields);
+
 
             // Refetch to validate local data
             mutateList();

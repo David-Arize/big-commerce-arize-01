@@ -4,20 +4,16 @@ import { useEffect, useState } from 'react';
 import InnerHeader from './innerHeader';
 
 export const TabIds = {
-    HOME: 'home',
+    PLATFORM: 'platform',
     PRODUCTS: 'products',
 };
 
 export const TabRoutes = {
-    [TabIds.HOME]: '/',
+    [TabIds.PLATFORM]: '/',
     [TabIds.PRODUCTS]: '/products',
 };
 
 const HeaderlessRoutes = [
-    '/orders/[orderId]',
-    '/orders/[orderId]/labels',
-    '/orders/[orderId]/modal',
-    '/productAppExtension/[productId]',
 ];
 
 const InnerRoutes = [
@@ -59,7 +55,7 @@ const Header = () => {
     });
 
     const items = [
-        { ariaControls: 'home', id: TabIds.HOME, title: 'Home' },
+        { ariaControls: 'platform', id: TabIds.PLATFORM, title: 'ARize Platform' },
         { ariaControls: 'products', id: TabIds.PRODUCTS, title: 'Products' },
     ];
 

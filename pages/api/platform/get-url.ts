@@ -1,15 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession, logoutUser } from "../../lib/auth";
 
-export default async function logout(
+export default async function platformTiokje(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
-    const session = await getSession(req);
+    const { PLATFORM_URL } = process.env;
+    const params = new URLSearchParams(
+      req.query as unknown as URLSearchParams
+    ).toString();
 
-    await logoutUser(session);
-    res.status(200).end();
+    res.redirect(`${PLATFORM_URL}/big-commerce/get-platform-url?${params}`);
   } catch (error) {
     const { message, response } = error;
     res.status(response?.status || 500).json({ message });
