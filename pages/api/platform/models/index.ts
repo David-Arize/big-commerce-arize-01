@@ -11,15 +11,13 @@ export default async function platformTiokje(
     const { PLATFORM_URL, PLATFORM_KEY } = process.env;
     const session = await getSession(req);
 
-    const { data } = await axios.post(
+    const { data } = await axios.get(
       `${PLATFORM_URL}/big-commerce/store/generate-token`,
-      {
-        storeHash: session.storeHash,
-        storeAccessToken: session.accessToken,
-      },
       {
         headers: {
           "arize-token": PLATFORM_KEY,
+          "store-hash": session.storeHash,
+          "store-token": session.accessToken,
         },
       }
     );

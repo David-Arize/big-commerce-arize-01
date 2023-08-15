@@ -11,7 +11,9 @@ export default async function platformTiokje(
       req.query as unknown as URLSearchParams
     ).toString();
 
-    res.redirect(`${PLATFORM_URL}/big-commerce/get-platform-url?${params}`);
+    res.redirect(
+      `${PLATFORM_URL}/big-commerce/store/get-platform-url?${params}`
+    );
   } catch (error) {
     const { message, response } = error;
     res.status(response?.status || 500).json({ message });

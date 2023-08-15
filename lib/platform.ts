@@ -11,7 +11,7 @@ export async function checkStore(session: SessionProps) {
     const storeHash = contextString.split("/")[1] || "";
 
     await axios.post(
-      `${PLATFORM_URL}/big-commerce/check-store`,
+      `${PLATFORM_URL}/big-commerce/store/check-store`,
       {
         storeHash,
         storeOwnerEmail: session.owner?.email,
@@ -32,7 +32,7 @@ export async function checkStore(session: SessionProps) {
 export async function getStoreToken(storeHash: string): Promise<string> {
   try {
     const result = await axios.post(
-      `${PLATFORM_URL}/big-commerce/get-store-token`,
+      `${PLATFORM_URL}/big-commerce/store/get-store-token`,
       {
         storeHash,
       },

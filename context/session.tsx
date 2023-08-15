@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { bigCommerceSDK } from '../scripts/bcSdk';
 
 const SessionContext = createContext({ context: '' });
 
@@ -11,8 +10,6 @@ const SessionProvider = ({ children }) => {
     useEffect(() => {
         if (query.context) {
             setContext(query.context.toString());
-            // Keeps app in sync with BC (e.g. heatbeat, user logout, etc)
-            bigCommerceSDK(query.context);
         }
     }, [query.context]);
 
