@@ -1,14 +1,8 @@
 import * as jwt from "jsonwebtoken";
 import { NextApiRequest } from "next";
 import * as BigCommerce from "node-bigcommerce";
-import {
-  ApiConfig,
-  QueryParams,
-  SessionContextProps,
-  SessionProps,
-} from "../types";
-import db from "./db";
-import { checkStoreExist } from "./dbs/platform";
+import { ApiConfig, QueryParams, SessionProps } from "../types";
+import { checkStore, getStoreToken } from "./platform";
 
 const { API_URL, AUTH_CALLBACK, CLIENT_ID, CLIENT_SECRET, JWT_KEY, LOGIN_URL } =
   process.env;
@@ -63,25 +57,13 @@ export function getBCVerify({ signed_payload_jwt }: QueryParams) {
 }
 
 export async function setSession(session: SessionProps) {
-  await db.setUser(session);
-  await db.setStore(session);
-  await db.setStoreUser(session);
-  await checkStoreExist(session);
+  await checkStore(session);
 }
 
 export async function getSession({ query: { context = "" } }: NextApiRequest) {
   if (typeof context !== "string") return;
   const { context: storeHash, user } = decodePayload(context);
-  const hasUser = await db.hasStoreUser(storeHash, user?.id);
-
-  // Before retrieving session/ hitting APIs, check user
-  if (!hasUser) {
-    throw new Error(
-      "User is not available. Please login or ensure you have access permissions."
-    );
-  }
-
-  const accessToken = await db.getStoreToken(storeHash);
+  const accessToken = await getStoreToken(storeHash);
 
   return { accessToken, storeHash, user };
 }
@@ -100,17 +82,7 @@ export function decodePayload(encodedContext: string) {
 
 // Removes store and storeUser on uninstall
 export async function removeDataStore(session: SessionProps) {
-  await db.deleteStore(session);
-  await db.deleteUser(session);
-}
+  console.error(session);
 
-// Removes users from app - getSession() for user will fail after user is removed
-export async function removeUserData(session: SessionProps) {
-  await db.deleteUser(session);
-}
-
-// Removes user from storeUsers on logout
-export async function logoutUser({ storeHash, user }: SessionContextProps) {
-  const session = { context: `store/${storeHash}`, user };
-  await db.deleteUser(session);
+  // Deactivate Store In Platform
 }

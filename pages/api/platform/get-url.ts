@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { sendSlackMessage } from "@lib/slack";
 
 export default async function platformTiokje(
   req: NextApiRequest,
@@ -15,5 +16,6 @@ export default async function platformTiokje(
     const { message, response } = error;
     res.status(response?.status || 500).json({ message });
     console.error(message);
+    sendSlackMessage(error);
   }
 }
