@@ -4,8 +4,8 @@
 import axios from "axios";
 import { useState } from "react";
 import useSWR from "swr";
-import ErrorMessage from "@components/error";
-import Loading from "@components/loading";
+import ErrorMessage from "@components/shared/error";
+import Loading from "@components/shared/loading";
 // import { getSession } from "@lib/auth";
 import { useSession } from "context/session";
 
@@ -21,6 +21,7 @@ const Index = () => {
         context ? `/api/platform/get-token?${params}` : null,
 
         async (url: string) => {
+            if (token) return
             const res = await axios.get(`${url}`);
 
             setToken(res.data?.token)
@@ -53,6 +54,9 @@ const Index = () => {
 
     );
 };
+
+
+
 
 // export async function getServerSideProps(req) {
 

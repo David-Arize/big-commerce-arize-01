@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router';
-import ErrorMessage from '../../components/error';
-import Form from '../../components/form';
-import Loading from '../../components/loading';
+import { useModels } from '@lib/hooks/useModels.hook';
+import Form from '../../components/product/form';
+import ErrorMessage from '../../components/shared/error';
+import Loading from '../../components/shared/loading';
 import { useSession } from '../../context/session';
 import { useProductCustomFieldsInfo, useProductInfo, useProductList } from '../../lib/hooks';
 import { FormData } from '../../types';
@@ -13,6 +14,7 @@ const ProductInfo = () => {
     const { error, isLoading, list = [], mutateList } = useProductList();
     const { isLoading: isInfoLoading, product } = useProductInfo(pid);
     const { customFields } = useProductCustomFieldsInfo(pid);
+    const { models } = useModels();
     const { description, is_visible: isVisible, name, price, type } = product ?? {};
 
     const formData = { description, isVisible, name, price, type };
@@ -51,7 +53,10 @@ const ProductInfo = () => {
     if (error) return <ErrorMessage error={error} />;
 
     return (
-        <Form formData={formData} onCancel={handleCancel} onSubmit={handleSubmit} />
+        <>
+            <Form formData={formData} onCancel={handleCancel} onSubmit={handleSubmit} />
+            {models?.map((model, ix) => <div key={ix}><img src={model.thumbnailUrl} style={{ height: '100px' }} /></div>)}
+        </>
     );
 };
 

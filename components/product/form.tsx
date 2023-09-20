@@ -1,6 +1,6 @@
 import { Button, Checkbox, Flex, FormGroup, Input, Panel, Select, Form as StyledForm, Textarea } from '@bigcommerce/big-design';
 import { ChangeEvent, FormEvent, useState } from 'react';
-import { FormData, StringKeyValue } from '../types';
+import { FormData, StringKeyValue } from '../../types';
 
 interface FormProps {
     formData: FormData;
@@ -49,7 +49,7 @@ const Form = ({ formData, onCancel, onSubmit }: FormProps) => {
 
     return (
         <StyledForm onSubmit={handleSubmit}>
-            <Panel header="Basic Information">
+            <Panel header="Your Product Information">
                 <FormGroup>
                     <Input
                         error={errors?.name}
@@ -57,22 +57,11 @@ const Form = ({ formData, onCancel, onSubmit }: FormProps) => {
                         name="name"
                         required
                         value={form.name}
-                        onChange={handleChange}
+                        style={{ backgroundColor: 'lightgray' }}
+                        readOnly
                     />
                 </FormGroup>
-                <FormGroup>
-                    <Select
-                        label="Product type"
-                        name="type"
-                        options={[
-                            { value: 'physical', content: 'Physical' },
-                            { value: 'digital', content: 'Digital' }
-                        ]}
-                        required
-                        value={form.type}
-                        onOptionChange={handleSelectChange}
-                    />
-                </FormGroup>
+                
                 <FormGroup>
                     <Input
                         error={errors?.price}
@@ -88,12 +77,7 @@ const Form = ({ formData, onCancel, onSubmit }: FormProps) => {
                     />
                 </FormGroup>
                 <FormGroup>
-                    <Checkbox
-                        name="isVisible"
-                        checked={form.isVisible}
-                        onChange={handleCheckboxChange}
-                        label="Visible on storefront"
-                    />
+                    <p>Your product is {form.isVisible ? ''}</p>
                 </FormGroup>
             </Panel>
             <Panel header="Description">
