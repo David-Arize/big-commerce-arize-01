@@ -5,6 +5,8 @@ import { bigcommerceClient, getSession } from "../../../lib/auth";
 export default async function list(req: NextApiRequest, res: NextApiResponse) {
   try {
     const { accessToken, storeHash } = await getSession(req);
+    console.log(accessToken, storeHash);
+
     const bigcommerce = bigcommerceClient(accessToken, storeHash);
     const { page, limit, sort, direction } = req.query;
     const params = new URLSearchParams({
@@ -14,6 +16,7 @@ export default async function list(req: NextApiRequest, res: NextApiResponse) {
     }).toString();
 
     const response = await bigcommerce.get(`/catalog/products?${params}`);
+
     res.status(200).json(response);
   } catch (error) {
     const { message, response } = error;

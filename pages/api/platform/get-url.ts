@@ -12,7 +12,7 @@ export default async function platformTiokje(
     ).toString();
 
     res.redirect(
-      `${PLATFORM_URL}/big-commerce/store/get-platform-url?${params}`
+      `${PLATFORM_URL}/third-party-providers/big-commerce/store/get-platform-url?${params}`
     );
   } catch (error) {
     const { message, response } = error;

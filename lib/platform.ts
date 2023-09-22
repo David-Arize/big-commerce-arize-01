@@ -6,16 +6,35 @@ const { PLATFORM_URL, PLATFORM_KEY } = process.env;
 
 export async function checkStore(session: SessionProps) {
   try {
-    const storeAccessToken = session.access_token ?? session?.aud;
+    const storeAccessToken = session.access_token;
     const contextString = session?.context ?? session?.sub;
     const storeHash = contextString.split("/")[1] || "";
 
+    let storeName = "";
+    if (storeAccessToken)
+      try {
+        const { data: storeObject } = await axios.get(
+          `https://api.bigcommerce.com/stores/${storeHash}/v2/store`,
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              "X-Auth-Token": storeAccessToken,
+            },
+          }
+        );
+        storeName = storeObject.name;
+      } catch (error) {
+        console.error(error);
+      }
+
     await axios.post(
-      `${PLATFORM_URL}/big-commerce/store/check-store`,
+      `${PLATFORM_URL}/third-party-providers/big-commerce/store/check-store`,
       {
         storeHash,
         storeOwnerEmail: session.owner?.email,
         storeAccessToken,
+        storeName,
       },
       {
         headers: {
@@ -32,7 +51,7 @@ export async function checkStore(session: SessionProps) {
 export async function getStoreToken(storeHash: string): Promise<string> {
   try {
     const result = await axios.post(
-      `${PLATFORM_URL}/big-commerce/store/get-store-token`,
+      `${PLATFORM_URL}/third-party-providers/big-commerce/store/get-store-token`,
       {
         storeHash,
       },

@@ -1,8 +1,10 @@
-import { Button, Dropdown, Panel, Small, Link as StyledLink, Table, TableSortDirection } from '@bigcommerce/big-design';
+import { Button, Dropdown, Panel, Link as StyledLink, Table, TableSortDirection } from '@bigcommerce/big-design';
 import { MoreHorizIcon } from '@bigcommerce/big-design-icons';
+import { LinkIcon, ShoppingCartIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ReactElement, useState } from 'react';
+import ProductImage from '@components/product/pruduct-image';
 import ErrorMessage from '../../components/shared/error';
 import Loading from '../../components/shared/loading';
 import { useProductList } from '../../lib/hooks';
@@ -38,24 +40,35 @@ const Products = () => {
         setDirection(newDirection);
     };
 
+
+
     const renderName = (id: number, name: string): ReactElement => (
         <Link href={`/products/${id}`}>
             <StyledLink>{name}</StyledLink>
         </Link>
     );
 
-    const renderPrice = (price: number): string => (
-        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price)
+    const renderImage = (id: number): ReactElement => (
+        <ProductImage pid={id} />
     );
 
-    const renderStock = (stock: number): ReactElement => (stock > 0
-        ? <Small>{stock}</Small>
-        : <Small bold marginBottom="none" color="danger">0</Small>
-    );
 
     const renderAction = (id: number): ReactElement => (
         <Dropdown
-            items={[{ content: 'Edit product', onItemClick: () => router.push(`/products/${id}`), hash: 'edit' }]}
+            items={[
+                {
+                    content: 'Assign a Model', onItemClick: () => router.push(`/products/${id}`), hash: 'assign', icon: <LinkIcon style={{
+                        width: '1.25rem',
+                        height: '1.25rem'
+                    }} />
+                },
+                {
+                    content: 'Order a Model', onItemClick: () => router.push(`/products/${id}`), hash: 'order', icon: <ShoppingCartIcon style={{
+                        width: '1.25rem',
+                        height: '1.25rem'
+                    }} />
+                },
+            ]}
             toggle={<Button iconOnly={<MoreHorizIcon color="secondary60" />} variant="subtle" />}
         />
     );
@@ -67,9 +80,8 @@ const Products = () => {
         <Panel id="products">
             <Table
                 columns={[
+                    { header: '', hash: 'image', render: ({ id }) => renderImage(id), isSortable: true },
                     { header: 'Product name', hash: 'name', render: ({ id, name }) => renderName(id, name), isSortable: true },
-                    { header: 'Stock', hash: 'stock', render: ({ stock }) => renderStock(stock), isSortable: true },
-                    { header: 'Price', hash: 'price', render: ({ price }) => renderPrice(price), isSortable: true },
                     { header: 'Action', hideHeader: true, hash: 'id', render: ({ id }) => renderAction(id) },
                 ]}
                 items={tableItems}

@@ -12,7 +12,7 @@ export default async function platformTiokje(
     const session = await getSession(req);
 
     const { data } = await axios.post(
-      `${PLATFORM_URL}/big-commerce/store/generate-token`,
+      `${PLATFORM_URL}/third-party-providers/big-commerce/store/generate-token`,
       {
         storeHash: session.storeHash,
         storeAccessToken: session.accessToken,

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import useSWR from "swr";
 import { useSession } from "../context/session";
 import { ErrorProps, QueryParams } from "../types";
@@ -89,6 +90,22 @@ export function useProductCustomFieldsInfo(pid: number) {
   return {
     customFields: customFields,
     isLoading: customFields ? false : !customFields && !error,
+    error: error,
+  };
+}
+
+export function useProductImages(pid: number) {
+  const { context } = useSession();
+  const params = new URLSearchParams({ context }).toString();
+
+  const { data: images, error } = useSWR(
+    context ? [`/api/products/${pid}/images`, params] : null,
+    fetcher
+  );
+
+  return {
+    images: images,
+    isLoading: images ? false : !images && !error,
     error: error,
   };
 }

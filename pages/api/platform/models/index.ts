@@ -12,7 +12,7 @@ export default async function platformTiokje(
     const session = await getSession(req);
 
     const { data } = await axios.get(
-      `${PLATFORM_URL}/big-commerce/models/get-models`,
+      `${PLATFORM_URL}/third-party-providers/big-commerce/models/get-models`,
       {
         headers: {
           "arize-token": PLATFORM_KEY,
