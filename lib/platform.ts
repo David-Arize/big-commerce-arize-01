@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SessionProps } from "../types";
+import { SessionProps } from "types/auth";
 import { sendSlackMessage } from "./slack";
 
 const { PLATFORM_URL, PLATFORM_KEY } = process.env;
@@ -47,7 +47,28 @@ export async function checkStore(session: SessionProps) {
     console.error(error);
   }
 }
-
+export async function deactivateStore(session: SessionProps) {
+  try {
+    const storeAccessToken = session.access_token;
+    const contextString = session?.context ?? session?.sub;
+    const storeHash = contextString.split("/")[1] || "";
+    await axios.post(
+      `${PLATFORM_URL}/third-party-providers/big-commerce/store/deactivate-store`,
+      {
+        storeHash,
+        storeAccessToken,
+      },
+      {
+        headers: {
+          "arize-token": PLATFORM_KEY,
+        },
+      }
+    );
+  } catch (error) {
+    sendSlackMessage(error);
+    console.error(error);
+  }
+}
 export async function getStoreToken(storeHash: string): Promise<string> {
   try {
     const result = await axios.post(

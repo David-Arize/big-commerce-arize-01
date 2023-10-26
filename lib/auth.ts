@@ -1,8 +1,8 @@
 import * as jwt from "jsonwebtoken";
 import { NextApiRequest } from "next";
 import * as BigCommerce from "node-bigcommerce";
-import { ApiConfig, QueryParams, SessionProps } from "../types";
-import { checkStore, getStoreToken } from "./platform";
+import { ApiConfig, QueryParams, SessionProps } from "types/auth";
+import { checkStore, deactivateStore, getStoreToken } from "./platform";
 
 const { API_URL, AUTH_CALLBACK, CLIENT_ID, CLIENT_SECRET, JWT_KEY, LOGIN_URL } =
   process.env;
@@ -82,7 +82,8 @@ export function decodePayload(encodedContext: string) {
 
 // Removes store and storeUser on uninstall
 export async function removeDataStore(session: SessionProps) {
-  console.error(session);
+  // console.error(session);
+  await deactivateStore(session);
 
   // Deactivate Store In Platform
 }
