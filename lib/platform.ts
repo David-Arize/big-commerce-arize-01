@@ -10,6 +10,8 @@ export async function checkStore(session: SessionProps) {
     const contextString = session?.context ?? session?.sub;
     const storeHash = contextString.split("/")[1] || "";
 
+    console.log(session);
+
     let storeName = "";
     if (storeAccessToken)
       try {
@@ -32,7 +34,7 @@ export async function checkStore(session: SessionProps) {
       `${PLATFORM_URL}/third-party-providers/big-commerce/store/check-store`,
       {
         storeHash,
-        storeOwnerEmail: session.owner?.email,
+        storeOwnerEmail: session.owner?.email || session.user?.email,
         storeAccessToken,
         storeName,
       },
